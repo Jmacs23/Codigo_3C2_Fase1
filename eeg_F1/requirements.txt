@@ -1,0 +1,5 @@
+numpy>=1.20
+scipy>=1.7
+pytest>=7.0
+# Solo en la maquina Windows del laboratorio:
+# El SDK de g.tec y su binding de Python (pygds) se distribuyen con el equipo

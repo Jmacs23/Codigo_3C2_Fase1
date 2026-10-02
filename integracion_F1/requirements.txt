@@ -1,0 +1,6 @@
+numpy>=1.20
+scipy>=1.7
+pytest>=7.0
+opencv-contrib-python>=4.6
+# El paquete `tasm` de la Linea 1 no esta en PyPI: se instala desde su
+# repositorio o se indica su ruta en config.tasm.ruta_tasm

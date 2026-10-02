@@ -1,0 +1,6 @@
+numpy>=1.20
+scipy>=1.7
+pytest>=7.0
+# En la maquina Linux del robot:
+#   ROS2 Humble (rclpy, std_msgs, sensor_msgs, geometry_msgs, nav_msgs)
+#   opencv-python  (para video_publisher)

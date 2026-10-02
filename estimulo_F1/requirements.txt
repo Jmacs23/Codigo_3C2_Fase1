@@ -1,0 +1,6 @@
+numpy>=1.20
+scipy>=1.7
+pytest>=7.0
+# Solo en la maquina del laboratorio:
+# psychopy>=2023.1
+# opencv-python>=4.5

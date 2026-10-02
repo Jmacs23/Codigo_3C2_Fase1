@@ -1,0 +1,60 @@
+# ===========================================================================
+#  params.yaml --- Parametros de los nodos ROS2
+#  Paquete: turtlebot3_bci_3c2
+# ===========================================================================
+#
+#  ATENCION: ESTE ARCHIVO NO ES LA FUENTE DE VERDAD.
+#
+#  Los valores del sistema estan en config.py (la clase Config). Este archivo
+#  solo contiene lo que ROS2 necesita saber antes de arrancar: puertos,
+#  frecuencias de nodo y conmutadores de fase.
+#
+#  Si un valor aparece en los dos sitios, MANDA config.py. Duplicar
+#  parametros entre dos archivos es la forma mas rapida de que el sistema
+#  haga algo distinto de lo que uno cree.
+#
+# ===========================================================================
+
+bci_node:
+  ros__parameters:
+    tcp_host: "0.0.0.0"      # escucha en todas las interfaces
+    tcp_puerto: 5556         # puerto donde Windows envia el estado TASM
+    hz: 20.0                 # debe coincidir con 1/paso_tasm
+    watchdog_s: 0.4
+
+mission_node:
+  ros__parameters:
+    hz: 20.0                 # debe coincidir con 1/ts_control
+
+ctrl_node:
+  ros__parameters:
+    hz: 20.0
+
+    # CONMUTADOR DE FASE
+    # false = Fase 1: PID simple, la referencia entra tal cual
+    # true  = Fase 2: ganancia de seguimiento ponderada por lambda_bci
+    #
+    # El campo lambda_bci viaja en el mensaje y se registra en ambos casos.
+    # Cambiar esto a true no requiere tocar la cadena de comunicacion.
+    usar_lambda_bci: false
+
+safety_node:
+  ros__parameters:
+    # NO BAJAR de 20 Hz. A 0.15 m/s el robot avanza 7.5 mm entre
+    # comprobaciones; a 10 Hz serian 15 mm, significativo frente al margen
+    # de seguridad de 0.15 m.
+    hz: 20.0
+
+interface_node:
+  ros__parameters:
+    host: "127.0.0.1"        # IP de la maquina Windows
+    puerto: 5557
+    hz: 30.0
+
+video_publisher:
+  ros__parameters:
+    host: "127.0.0.1"        # IP de la maquina Windows
+    puerto: 5555
+    calidad: 70              # calidad JPEG; afecta a lo que el usuario ve,
+                             # no a la deteccion de objetos
+    topic: "/camera/image_raw"
