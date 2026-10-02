@@ -1,0 +1,185 @@
+===========================================================================
+  CODIGO DEL PROYECTO --- FASE 1
+  Sistema BCI-SSVEP asincrono para telepresencia robotica
+===========================================================================
+
+Este archivo es el indice. Empieza por aqui.
+
+Todo lo que necesitas para trabajar esta explicado en la Guia del Asistente.
+Este documento solo ordena los archivos y dice por donde empezar.
+
+
+-------------------------------------------------------------------
+QUE HAY AQUI
+-------------------------------------------------------------------
+
+Seis paquetes de Python. Cada uno cubre una parte del sistema y se puede
+usar por separado.
+
+  nucleo_F1/         Maquina de estados, clasificador, simulador
+  estimulo_F1/       Genera los estimulos parpadeantes y la pantalla
+  eeg_F1/            Lee la senal cerebral, la filtra, la trocea
+  ros2_F1/           Los nodos que controlan el robot
+  vision_F1/         Detecta objetos y decide cuando cambiar de etapa
+  integracion_F1/    Conecta con el detector de estados y corre los
+                     experimentos
+
+Cada paquete tiene su propio README.txt con el detalle.
+
+
+-------------------------------------------------------------------
+POR DONDE EMPEZAR
+-------------------------------------------------------------------
+
+  1. Instala lo basico:
+
+       pip install numpy scipy pytest opencv-contrib-python
+
+  2. Comprueba que todo funciona:
+
+       cd nucleo_F1
+       python run.py smoke
+       python run.py test
+
+  3. Abre la Guia del Asistente y sigue el Entregable 1.
+
+
+-------------------------------------------------------------------
+QUE PAQUETE USA CADA ENTREGABLE
+-------------------------------------------------------------------
+
+  Entregable 1  --->  nucleo_F1
+  Entregable 2  --->  estimulo_F1
+  Entregable 3  --->  eeg_F1
+  Entregable 4  --->  ros2_F1
+  Entregable 5  --->  vision_F1
+  Entregable 6  --->  integracion_F1
+  Entregable 7  --->  integracion_F1
+  Entregable 8  --->  todos (informe final)
+
+
+-------------------------------------------------------------------
+POR QUE CADA PAQUETE REPITE ALGUNOS ARCHIVOS
+-------------------------------------------------------------------
+
+Veras que config.py aparece en los seis paquetes, y que algunos modulos
+estan repetidos en carpetas logica/.
+
+Es deliberado: asi cada paquete corre por si solo, sin depender de que los
+demas esten instalados. Puedes trabajar en el Entregable 3 sin haber tocado
+todavia los paquetes de vision o de ROS2.
+
+IMPORTANTE: config.py es el MISMO archivo en todos, y va creciendo. El de
+integracion_F1 es el mas completo porque incluye las secciones de los seis
+bloques.
+
+Si modificas config.py, hazlo en el paquete donde estes trabajando y anota
+el cambio. No hace falta que lo sincronices en los seis a mano.
+
+
+-------------------------------------------------------------------
+QUE FUNCIONA SIN INSTALAR NADA ESPECIAL
+-------------------------------------------------------------------
+
+  nucleo_F1          Solo Python y NumPy
+  ros2_F1            La logica corre sin ROS2 (los nodos no)
+  integracion_F1     Solo Python
+  vision_F1          Necesita opencv-contrib-python
+  estimulo_F1        La logica corre sin PsychoPy (la pantalla no)
+  eeg_F1             La cadena corre con senal sintetica
+
+Es decir: puedes avanzar bastante antes de tocar el hardware del
+laboratorio.
+
+
+-------------------------------------------------------------------
+LAS TRES PARTES QUE ESTAN INCOMPLETAS A PROPOSITO
+-------------------------------------------------------------------
+
+  1. El amplificador de EEG
+     Donde: eeg_F1/eeg_source.py, clase FuenteGUSBamp
+     Su libreria solo existe para Windows y necesita licencia
+
+  2. El detector de objetos YOLO
+     Donde: vision_F1/vision_fusion.py, clase DetectorYOLO
+     La libreria no estaba instalada. El sistema funciona sin el
+
+  3. El modulo de deteccion de estados
+     Donde: integracion_F1/tasm_interface.py, clase FuenteTASMReal
+     Lo desarrolla otra persona del equipo
+
+Las tres estan marcadas en el codigo con  >>> COMPLETAR  y llevan un
+esbozo en comentarios de que llamadas hacer.
+
+En los tres casos esta definido el CONTRATO: que debe devolver cada funcion
+y en que unidades. No cambies el contrato para que encaje con la libreria;
+la conversion va dentro del adaptador.
+
+
+-------------------------------------------------------------------
+SOBRE LAS FASES
+-------------------------------------------------------------------
+
+Este codigo es de la FASE 1.
+
+La FASE 2 es una extension posterior que no esta implementada, pero su
+punto de conexion ya esta preparado:
+
+  - El valor lambda_bci YA VIAJA en los mensajes y YA SE GUARDA en cada
+    trial, aunque en Fase 1 no intervenga en el control.
+
+  - En ros2_F1/.../ctrl_node.py hay un bloque delimitado por
+        ===== INICIO BLOQUE FASE 2 =====
+        ===== FIN BLOQUE FASE 2 =====
+    desactivado por el parametro usar_lambda_bci de params.yaml.
+
+Deja ese bloque como esta. Solo necesitas saber que existe.
+
+
+-------------------------------------------------------------------
+ESTE CODIGO ES UN BORRADOR
+-------------------------------------------------------------------
+
+Las 279 pruebas automaticas pasan, pero NO se ha ejecutado nunca en el
+hardware del laboratorio.
+
+Es tu responsabilidad leerlo, entenderlo, y corregir los errores que
+encuentres. Cuando corrijas algo, documenta que estaba mal, por que, y como
+lo arreglaste.
+
+Varios de los errores que ya se corrigieron durante su desarrollo NO
+PRODUCIAN NINGUN MENSAJE DE ERROR: el programa corria y devolvia numeros
+perfectamente creibles que no significaban nada.
+
+Cuando un resultado salga sospechosamente bien o sospechosamente mal, esa es
+la senal para revisar el codigo.
+
+El protocolo completo de que hacer al encontrar un error esta en la Guia del
+Asistente.
+
+
+-------------------------------------------------------------------
+RESUMEN DE COMANDOS
+-------------------------------------------------------------------
+
+  nucleo_F1        python run.py smoke | test | fsm | seleccion | trial
+                                | viabilidad | barrido
+
+  estimulo_F1      python run_estimulo.py espectro | deriva | timing | demo
+
+  eeg_F1           python run_eeg.py filtros | causal | pipeline
+                                   | latencia | impedancias
+
+  ros2_F1          python run_ros2.py grafo | seguridad | navegacion
+                                    | mision | integracion | despliegue
+
+  vision_F1        python run_vision.py marcadores | deteccion | alcance
+                                      | transicion | calibracion
+
+  integracion_F1   python run_integracion.py contrato | regresion
+                                           | protocolo | expA | expB
+                                           | migracion
+
+  En todos:        python -m pytest tests/ -v
+
+===========================================================================
