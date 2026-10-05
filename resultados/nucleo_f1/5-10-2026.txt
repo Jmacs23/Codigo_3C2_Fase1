@@ -1,0 +1,465 @@
+python run.py config
+C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG, Config
+
+========================================================================
+CONFIGURACION
+========================================================================
+======================================================================
+CONFIGURACION DEL SISTEMA
+======================================================================
+  Modo BCI            : tasm
+
+  Frecuencias (Hz)    : (8.0, 12.0, 14.0, 15.2)
+  Fases JFPM (rad)    : (0.0, 1.571, 3.142, 4.712)
+  Muestreo            : 256.0 Hz, 9 canales
+  Notch / banda       : 60.0 Hz / (5.0, 90.0) Hz
+  Ventana TASM        : 750 ms (192 muestras), paso 50 ms
+  Racha de confirmac. : 8 ventanas = 0.40 s
+
+  Robot               : 0.281 x 0.306 m, diagonal 0.415 m
+  Velocidades         : u=0.15 m/s, w=0.5 rad/s
+  rho_safe            : 0.15 m
+
+  Escenarios:
+    Escenario 1 - Corredor recto     gap=1.20 m  margen libre=0.919 m
+    Escenario 2 - Corredor en L      gap=0.90 m  margen libre=0.619 m
+    Escenario 3 - Sala abierta       gap=0.70 m  margen libre=0.419 m
+
+  Etapa 2:
+    N=2   D_min=0.37 m  px/objeto=618  decisiones=1
+    N=4   D_min=0.79 m  px/objeto=298  decisiones=2
+    N=8   D_min=1.62 m  px/objeto=146  decisiones=3
+======================================================================
+
+------------------------------------------------------------------------
+VALIDACION
+------------------------------------------------------------------------
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+  Nota: los avisos de diseno no impiden ejecutar, pero
+  conviene entender por que aparecen.
+python run.py smoke
+C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG, Config
+
+========================================================================
+PRUEBA DE HUMO --- todos los modulos
+========================================================================
+
+------------------------------------------------------------------------
+1. Configuracion
+------------------------------------------------------------------------
+  [ OK ] fs = 256.0 Hz
+  [ OK ] frecuencias = (8.0, 12.0, 14.0, 15.2)
+  [ OK ] el robot cabe girando en todos los escenarios (diagonal 0.415 m)
+
+------------------------------------------------------------------------
+2. FBCCA
+------------------------------------------------------------------------
+  [ OK ] recupera la frecuencia inyectada (12.0 Hz, p_max=0.454)
+
+------------------------------------------------------------------------
+3. Maquina de estados
+------------------------------------------------------------------------
+  [ OK ] enclava tras 8 ventanas IC
+
+------------------------------------------------------------------------
+4. Mock de TASM
+------------------------------------------------------------------------
+  [ OK ] genera los tres estados (IC=133, TR=16, Idle=51)
+
+------------------------------------------------------------------------
+5. Seleccion binaria
+------------------------------------------------------------------------
+  [ OK ] selecciona con 3 decisiones (teoricas 3)
+
+------------------------------------------------------------------------
+6. Simulador
+------------------------------------------------------------------------
+  [ OK ] completa un trial (35.2 s, 2.90 m)
+
+------------------------------------------------------------------------
+RESULTADO
+------------------------------------------------------------------------
+  TODO CORRECTO
+python run.py test
+C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG, Config
+
+========================================================================
+BATERIA DE TESTS
+========================================================================
+========================= test session starts =========================
+platform win32 -- Python 3.14.7, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\maria\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1
+plugins: anyio-4.15.1
+collected 50 items                                                     
+
+tests/test_nucleo.py::TestConfig::test_validacion_sin_errores_criticos PASSED [  2%]
+tests/test_nucleo.py::TestConfig::test_es_inmutable PASSED       [  4%]
+tests/test_nucleo.py::TestConfig::test_copia_con_no_altera_el_original PASSED [  6%]
+tests/test_nucleo.py::TestConfig::test_copia_con_rechaza_parametros_inexistentes PASSED [  8%]
+tests/test_nucleo.py::TestConfig::test_frecuencias_en_grilla_benchmark PASSED [ 10%]
+tests/test_nucleo.py::TestConfig::test_sin_armonico_sobre_la_red PASSED [ 12%]
+tests/test_nucleo.py::TestConfig::test_banda_cubre_cuarto_armonico PASSED [ 14%]
+tests/test_nucleo.py::TestConfig::test_robot_cabe_girando_en_todos_los_escenarios PASSED [ 16%]
+tests/test_nucleo.py::TestConfig::test_escenarios_navegables PASSED [ 18%]
+tests/test_nucleo.py::TestConfig::test_niveles_n_son_potencias_de_dos PASSED [ 20%]
+tests/test_nucleo.py::TestConfig::test_niveles_n_caben_en_el_umbral PASSED [ 22%]
+tests/test_nucleo.py::TestConfig::test_objetos_detectables PASSED [ 24%]
+tests/test_nucleo.py::TestFSM::test_arranca_detenido PASSED      [ 26%]
+tests/test_nucleo.py::TestFSM::test_enclava_tras_la_racha_completa PASSED [ 28%]
+tests/test_nucleo.py::TestFSM::test_no_enclava_antes_de_la_racha PASSED [ 30%]
+tests/test_nucleo.py::TestFSM::test_tr_no_transiciona PASSED     [ 32%]
+tests/test_nucleo.py::TestFSM::test_idle_no_transiciona PASSED   [ 34%]
+tests/test_nucleo.py::TestFSM::test_idle_mantiene_el_comando_enclavado PASSED [ 36%]
+tests/test_nucleo.py::TestFSM::test_racha_se_reinicia_si_cambia_la_frecuencia PASSED [ 38%]
+tests/test_nucleo.py::TestFSM::test_en_movimiento_solo_se_acepta_parar PASSED [ 40%]
+tests/test_nucleo.py::TestFSM::test_velocidades_dentro_de_limites PASSED [ 42%]
+tests/test_nucleo.py::TestFSM::test_tope_de_traslacion PASSED    [ 44%]
+tests/test_nucleo.py::TestFSM::test_reiniciar_deja_el_estado_inicial PASSED [ 46%]
+tests/test_nucleo.py::TestMock::test_genera_los_tres_estados PASSED [ 48%]
+tests/test_nucleo.py::TestMock::test_respeta_la_restriccion_idle_a_ic PASSED [ 50%]
+tests/test_nucleo.py::TestMock::test_binario_nunca_reporta_tr PASSED [ 52%]
+tests/test_nucleo.py::TestMock::test_tasm_tiene_menor_fpr_que_binario PASSED [ 54%]
+tests/test_nucleo.py::TestMock::test_reproducible_con_la_misma_semilla PASSED [ 56%]
+tests/test_nucleo.py::TestFBCCA::test_recupera_la_frecuencia_inyectada PASSED [ 58%]
+tests/test_nucleo.py::TestFBCCA::test_rho_tiene_la_dimension_correcta PASSED [ 60%]
+tests/test_nucleo.py::TestFBCCA::test_p_max_en_rango PASSED      [ 62%]
+tests/test_nucleo.py::TestFBCCA::test_gradiente_muestra_patron_cruzado PASSED [ 64%]
+tests/test_nucleo.py::TestFBCCA::test_ruido_puro_no_produce_correlacion_dominante PASSED [ 66%]
+tests/test_nucleo.py::TestSeleccion::test_decisiones_exactamente_logaritmicas PASSED [ 68%]
+tests/test_nucleo.py::TestSeleccion::test_todos_los_objetivos_alcanzables PASSED [ 70%]
+tests/test_nucleo.py::TestSeleccion::test_ordena_por_posicion_horizontal PASSED [ 72%]
+tests/test_nucleo.py::TestSeleccion::test_rechaza_menos_de_dos_objetos PASSED [ 74%]
+tests/test_nucleo.py::TestSeleccion::test_timeout_no_avanza_la_busqueda PASSED [ 76%]
+tests/test_nucleo.py::TestSeleccion::test_n_no_potencia_de_dos_da_decisiones_variables PASSED [ 78%]
+tests/test_nucleo.py::TestMetricas::test_cuenta_transiciones_durante_tr PASSED [ 80%]
+tests/test_nucleo.py::TestMetricas::test_no_cuenta_transiciones_forzadas PASSED [ 82%]
+tests/test_nucleo.py::TestMetricas::test_fpr_tr PASSED           [ 84%]
+tests/test_nucleo.py::TestMetricas::test_registros_vacios_no_rompen PASSED [ 86%]
+tests/test_nucleo.py::TestMetricas::test_comparacion_pareada PASSED [ 88%]
+tests/test_nucleo.py::TestMetricas::test_comparacion_rechaza_series_desiguales PASSED [ 90%]
+tests/test_nucleo.py::TestIntegracion::test_trial_completo_termina PASSED [ 92%]
+tests/test_nucleo.py::TestIntegracion::test_trial_llega_a_la_zona PASSED [ 94%]
+tests/test_nucleo.py::TestIntegracion::test_seleccion_usa_decisiones_teoricas PASSED [ 96%]
+tests/test_nucleo.py::TestIntegracion::test_sin_colisiones_en_escenario_facil PASSED [ 98%]
+tests/test_nucleo.py::TestIntegracion::test_ambos_modos_corren PASSED [100%]
+
+========================= 50 passed in 35.23s =========================
+python run.py fsm
+C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG, Config
+
+========================================================================
+COMPUERTA 1 --- Supresion durante transiciones de mirada
+========================================================================
+
+  Esta es la propiedad central del sistema: un comando detectado
+  durante una transicion de mirada NO debe enclavarse.
+
+
+------------------------------------------------------------------------
+Caso 1: fijacion sostenida en 'avanzar'
+------------------------------------------------------------------------
+  [ OK ] enclava AVANZANDO en la ventana 8
+  [ OK ] exactamente tras 8 ventanas (400 ms)
+
+------------------------------------------------------------------------
+Caso 2: transicion de mirada con comandos espurios
+------------------------------------------------------------------------
+  Duracion de TR simulada : 600 ms (11 ventanas)
+  Racha necesaria         : 8 ventanas
+
+  [ OK ] con 11 ventanas espurias consecutivas: no cambio
+
+  ATENCION: una TR de duracion maxima (11 ventanas)
+  SUPERA la racha de confirmacion (8).
+  Es el escenario en que TASM aporta: sin el, esas ventanas
+  espurias enclavarian un comando.
+
+------------------------------------------------------------------------
+Caso 3: transicion obligatoria por DETENIDO
+------------------------------------------------------------------------
+  [ OK ] en movimiento, un comando de giro se ignora
+  [ OK ] el comando de parar si se acepta
+
+------------------------------------------------------------------------
+RESULTADO
+------------------------------------------------------------------------
+  COMPUERTA SUPERADA
+python run.py fbcca
+C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG, Config
+
+========================================================================
+COMPUERTA 2 --- Clasificador FBCCA
+========================================================================
+
+------------------------------------------------------------------------
+Precision por frecuencia (10 repeticiones, SNR 0 dB)
+------------------------------------------------------------------------
+   frecuencia   aciertos   p_max medio
+         8.0Hz     10/10          0.455
+        12.0Hz     10/10          0.457
+        14.0Hz     10/10          0.571
+        15.2Hz     10/10          0.553
+
+  [ OK ] precision global 100.0% (criterio: >= 80%)
+
+------------------------------------------------------------------------
+Efecto de la SNR
+------------------------------------------------------------------------
+      SNR   precision
+      5dB      100.0%
+      0dB      100.0%
+     -5dB      100.0%
+    -10dB      100.0%
+
+  Nota: la senal sintetica no reproduce la estructura espacial
+  del EEG real. Estos numeros verifican que el pipeline funciona,
+  no predicen el rendimiento con un sujeto.
+
+------------------------------------------------------------------------
+RESULTADO
+------------------------------------------------------------------------
+  COMPUERTA SUPERADA
+python run.py seleccion
+C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG, Config
+
+========================================================================
+COMPUERTA 3 --- Complejidad logaritmica de la seleccion
+========================================================================
+
+  Verifica la afirmacion central de la Etapa 2: con dos
+  frecuencias, seleccionar entre N objetos requiere exactamente
+  ceil(log2 N) decisiones, para CUALQUIER objetivo.
+
+------------------------------------------------------------------------
+Decisiones por objetivo
+------------------------------------------------------------------------
+     N   teorico                    observado   uniforme
+     2         1                       [1, 1]         SI
+     4         2                 [2, 2, 2, 2]         SI
+     8         3     [3, 3, 3, 3, 3, 3, 3, 3]         SI
+
+  [ OK ] todas las configuraciones cumplen ceil(log2 N)
+
+------------------------------------------------------------------------
+Viabilidad fisica de cada nivel
+------------------------------------------------------------------------
+     N    D_min    px/obj    cabe   detectable
+     2    0.37m      618      SI           SI
+     4    0.79m      298      SI           SI
+     8    1.62m      146      SI           SI
+
+------------------------------------------------------------------------
+RESULTADO
+------------------------------------------------------------------------
+  COMPUERTA SUPERADA
+python run.py trial
+C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG, Config
+
+========================================================================
+TRIAL COMPLETO --- Escenario 1 - Corredor recto
+========================================================================
+  Sala         : 6.0 x 4.0 m
+  Obstaculos   : 2
+  Gap          : 1.2 m
+  Margen libre : 0.919 m
+
+------------------------------------------------------------------------
+MODO: binary
+------------------------------------------------------------------------
+  Modo BCI            : binary
+  Escenario           : Escenario 1 - Corredor recto
+  Exito               : SI
+  Tiempo total        : 37.9 s
+
+  N_FP_TR (primaria)  : 0
+  FPR en TR           : 51.3%
+  FPR en Idle         : 0.0%
+  Tiempo en TR        : 3.8 s
+
+  Transiciones utiles : 3
+  Forzadas (salvag.)  : 2
+  Colisiones          : 0
+  Emergencias         : 0
+  rho_min global      : 0.500 m
+  Distancia recorrida : 2.90 m
+
+  Llego a zona E2     : SI
+  Seleccion correcta  : SI
+  Decisiones Etapa 2  : 2
+
+------------------------------------------------------------------------
+MODO: tasm
+------------------------------------------------------------------------
+  Modo BCI            : tasm
+  Escenario           : Escenario 1 - Corredor recto
+  Exito               : SI
+  Tiempo total        : 38.7 s
+
+  N_FP_TR (primaria)  : 0
+  FPR en TR           : 9.2%
+  FPR en Idle         : 0.0%
+  Tiempo en TR        : 4.9 s
+
+  Transiciones utiles : 3
+  Forzadas (salvag.)  : 2
+  Colisiones          : 0
+  Emergencias         : 0
+  rho_min global      : 0.500 m
+  Distancia recorrida : 2.90 m
+
+  Llego a zona E2     : SI
+  Seleccion correcta  : SI
+  Decisiones Etapa 2  : 2
+python run.py viabilidad
+C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG, Config
+
+========================================================================
+HITO DE VIABILIDAD TEMPRANA
+========================================================================
+
+  Pregunta que responde:
+    ?La supresion de transiciones produce una reduccion medible
+     de comandos espurios, o el mecanismo de confirmacion ya
+     resuelve el problema por si solo?
+
+  Configuracion: n_conf = 8 ventanas (400 ms)
+  Semillas por condicion: 12
+
+------------------------------------------------------------------------
+Escenario 1 - Corredor recto
+------------------------------------------------------------------------
+                               TASM   baseline
+  Comandos espurios               0          0
+  FPR en TR                    9.1%      33.5%
+  Trials con exito               12         12
+
+  Pares comparados    : 12
+  Media TASM          : 0.00
+  Media baseline      : 0.00
+  Reduccion absoluta  : +0.00
+  Reduccion relativa  : +0.0%
+  d de Cohen          : 0.00
+
+------------------------------------------------------------------------
+Escenario 2 - Corredor en L
+------------------------------------------------------------------------
+                               TASM   baseline
+  Comandos espurios               0          0
+  FPR en TR                    9.1%      33.5%
+  Trials con exito               12         12
+
+  Pares comparados    : 12
+  Media TASM          : 0.00
+  Media baseline      : 0.00
+  Reduccion absoluta  : +0.00
+  Reduccion relativa  : +0.0%
+  d de Cohen          : 0.00
+
+------------------------------------------------------------------------
+INTERPRETACION
+------------------------------------------------------------------------
+  Criterio de la Bitacora TASM: reduccion de FPR > 30% frente al
+  baseline binario para considerar que hay contribucion.
+
+  Si la reduccion fuera nula o negativa, revisar antes de seguir:
+    1. ?n_conf es demasiado grande? Prueba 'python run.py barrido'
+    2. ?Los escenarios inducen suficientes transiciones?
+    3. ?El override de emergencia esta absorbiendo el efecto?
+
+  Tiempo de computo: 124.6 s
+python run.py barrido
+C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG, Config
+
+========================================================================
+BARRIDO DE n_conf
+========================================================================
+
+  n_conf es el numero de ventanas consecutivas en IC necesarias
+  para enclavar un comando. Es el parametro de compromiso central:
+
+    Muy pequeno -> entran comandos espurios
+    Muy grande  -> ninguna transicion alcanza a completarlo, y el
+                   baseline tampoco falla: no hay nada que medir
+
+  Su valor definitivo debe fijarse con los datos de la Linea 1.
+
+------------------------------------------------------------------------
+Escenario 1 - Corredor recto, 20 semillas por condicion
+------------------------------------------------------------------------
+   n_conf     ms |    TASM  baseline  reduccion       %
+  ----------------------------------------------------------
+        4    200 |       6        17         11     65%
+        6    300 |       3         8          5     62%
+        8    400 |       0         2          2    100%  <-- actual
+       10    500 |       2         0         -2      0%
+       12    600 |       0         2          2    100%
+       16    800 |       1         0         -1      0%
+
+  Criterio de seleccion: el valor debe dar reduccion clara SIN
+  que los numeros absolutos sean tan pequenos que se pierda
+  potencia estadistica en el experimento con sujetos.
