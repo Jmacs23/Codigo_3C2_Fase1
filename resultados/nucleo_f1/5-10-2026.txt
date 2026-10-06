@@ -1,3 +1,18 @@
+----------------------------------------------------------------------------------------------------
+Resultados de haber ejecutado:
+
+  python run.py config      Vuelca y valida la configuracion
+  python run.py smoke       Prueba rapida de todos los modulos
+  python run.py test        Las 50 pruebas
+  python run.py fsm         Compuerta 1: supresion durante transiciones
+  python run.py fbcca       Compuerta 2: recuperacion de frecuencia
+  python run.py seleccion   Compuerta 3: complejidad logaritmica
+  python run.py trial       Un trial completo
+  python run.py viabilidad  HITO DE VIABILIDAD
+  python run.py barrido     Barrido del parametro n_conf
+
+En ese mismo orden
+----------------------------------------------------------------------------------------------------
 python run.py config
 C:\Users\maria\Documents\TESIS\Codigo_3C2_Fase1\nucleo_F1\run.py:55: UserWarning: 
 
