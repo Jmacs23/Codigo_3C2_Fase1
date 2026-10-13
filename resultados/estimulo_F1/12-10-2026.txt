@@ -1,0 +1,357 @@
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+python3 run_estimulo.py config
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/estimulo_F1/run_estimulo.py:53: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+CONFIGURACION DEL ESTIMULO
+========================================================================
+
+  Pantalla
+    Refresco          : 60.0 Hz
+    Resolucion        : 1920 x 1080
+    Distancia vision  : 0.7 m
+
+  Estimulo
+    Tamano angular    : 3.0 grados = 135 px
+    Rejilla           : 16 x 16
+    Densidad          : 60% (154 celdas encendidas)
+    Distribucion      : aleatoria
+
+  Frecuencias y fases
+     indice   f (Hz)       fase         posicion
+          0      8.0         0o         giro izq  (-0.42, +0.00)
+          1     12.0        90o         giro der  (+0.42, +0.00)
+          2     14.0       180o          avanzar  (+0.00, +0.38)
+          3     15.2       270o            parar  (+0.00, -0.38)
+
+  Validacion
+    Ventana FFT       : 5.0 s (resolucion 0.20 Hz)
+    Frames perdidos   : maximo 1%
+
+------------------------------------------------------------------------
+VALIDACION
+------------------------------------------------------------------------
+  Sin problemas en la configuracion del estimulo.
+  
+  
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+ 
+python3 run_estimulo.py realizable
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/estimulo_F1/run_estimulo.py:53: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+REALIZABILIDAD DE LAS FRECUENCIAS A 60 Hz
+========================================================================
+
+  Con onda cuadrada solo son realizables las frecuencias de la
+  forma R/n con n PAR. Con modulacion sinusoidal muestreada,
+  cualquier frecuencia por debajo de Nyquist.
+
+------------------------------------------------------------------------
+Refresco 60.0 Hz, Nyquist 30.0 Hz
+------------------------------------------------------------------------
+    f (Hz)       R/f   entero    par   cuadrada   sinusoidal
+       8.0     7.500       no     no         NO           SI
+      12.0     5.000       si     no         NO           SI
+      14.0     4.286       no     no         NO           SI
+      15.2     3.947       no     no         NO           SI
+
+------------------------------------------------------------------------
+CONCLUSION
+------------------------------------------------------------------------
+  Realizables con onda cuadrada : 0 de 4
+  Realizables con sinusoidal    : 4 de 4
+
+  Por eso el sistema usa modulacion sinusoidal muestreada.  
+  
+ 
+---------------------------------------------------------------------------------------------------------------------------------------------
+python3 run_estimulo.py espectro
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/estimulo_F1/run_estimulo.py:53: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+VERIFICACION ESPECTRAL DE LA SENAL GENERADA
+========================================================================
+
+  Se genera la secuencia ideal de luminancia y se comprueba que
+  su espectro tiene el pico exactamente en la frecuencia nominal.
+
+------------------------------------------------------------------------
+Ventana de 5.0 s (300 frames)
+------------------------------------------------------------------------
+    nominal      pico     error    bin   bin teorico
+       8.0Hz     8.00Hz   0.0000Hz     40            40
+      12.0Hz    12.00Hz   0.0000Hz     60            60
+      14.0Hz    14.00Hz   0.0000Hz     70            70
+      15.2Hz    15.20Hz   0.0000Hz     76            76
+
+  [ OK ] todas las frecuencias caen exactamente en su bin
+
+------------------------------------------------------------------------
+PUREZA ESPECTRAL
+------------------------------------------------------------------------
+  Energia fuera de la frecuencia nominal (deberia ser minima).
+
+   frecuencia   energia en pico        resto      ratio
+         8.0Hz            5625.0       0.0000   0.00e+00
+        12.0Hz            5625.0       0.0000   0.00e+00
+        14.0Hz            5625.0       0.0000   0.00e+00
+        15.2Hz            5625.0       0.0000   0.00e+00
+
+  Un ratio muy bajo confirma que la senal es una sinusoide pura,
+  sin los armonicos que introduciria una onda cuadrada. 
+  
+---------------------------------------------------------------------------------------------------------------------------------------------
+python3 run_estimulo.py deriva
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/estimulo_F1/run_estimulo.py:53: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+POR QUE EL CONTADOR DE FRAMES Y NO EL RELOJ
+========================================================================
+
+  El error mas facil de cometer al implementar el estimulo es
+  calcular la fase con el tiempo transcurrido en lugar del
+  contador de frames.
+
+  Se simula una implementacion que acumula el paso de tiempo con
+  un error de solo 0.1 ms por frame.
+
+------------------------------------------------------------------------
+Error de 0.01 ms por frame
+------------------------------------------------------------------------
+      tiempo     deriva de fase efecto
+      0.5 min              98.5o  degradacion
+        1 min             197.0o  SENAL INVERTIDA
+        2 min              34.0o  degradacion
+        5 min             265.0o  degradacion
+       10 min             169.9o  SENAL INVERTIDA
+
+------------------------------------------------------------------------
+Error de 0.1 ms por frame
+------------------------------------------------------------------------
+      tiempo     deriva de fase efecto
+      0.5 min             265.0o  degradacion
+        1 min             169.9o  SENAL INVERTIDA
+        2 min             339.8o  despreciable
+        5 min             129.6o  degradacion
+       10 min             259.2o  degradacion
+
+------------------------------------------------------------------------
+Error de 0.5 ms por frame
+------------------------------------------------------------------------
+      tiempo     deriva de fase efecto
+      0.5 min             244.8o  degradacion
+        1 min             129.6o  degradacion
+        2 min             259.2o  degradacion
+        5 min             288.0o  degradacion
+       10 min             216.0o  degradacion
+
+------------------------------------------------------------------------
+CONCLUSION
+------------------------------------------------------------------------
+  Con contador de frames la deriva es EXACTAMENTE cero, porque la
+  fase se calcula de un indice entero:
+
+      angulo = 2*pi*f*(frame/refresh) + fase
+
+  Si en el codigo de PsychoPy ves algo parecido a
+  'fase = 2*pi*f*time.time()', esta mal.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+python3 run_estimulo.py timing
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/estimulo_F1/run_estimulo.py:53: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+COMPUERTA DEL BLOQUE 2 --- Temporizacion del estimulo
+========================================================================
+
+------------------------------------------------------------------------
+1. Espectro exacto
+------------------------------------------------------------------------
+  [ OK ] 8.0 Hz cae en el bin 40 sin error
+  [ OK ] 12.0 Hz cae en el bin 60 sin error
+  [ OK ] 14.0 Hz cae en el bin 70 sin error
+  [ OK ] 15.2 Hz cae en el bin 76 sin error
+
+------------------------------------------------------------------------
+2. Fase estable a lo largo del trial
+------------------------------------------------------------------------
+  [ OK ] 8.0 Hz: deriva de 0.000 grados en 6 ventanas
+  [ OK ] 12.0 Hz: deriva de 0.000 grados en 6 ventanas
+  [ OK ] 14.0 Hz: deriva de 0.000 grados en 6 ventanas
+  [ OK ] 15.2 Hz: deriva de 0.000 grados en 6 ventanas
+
+------------------------------------------------------------------------
+3. Rango de luminancia
+------------------------------------------------------------------------
+  [ OK ] luminancia dentro de [0,1] (min 0.0000, max 1.0000)
+
+------------------------------------------------------------------------
+4. Densidad de la textura
+------------------------------------------------------------------------
+  [ OK ] densidad 60.2% (objetivo 60%)
+
+------------------------------------------------------------------------
+5. Bucle de interfaz completo
+------------------------------------------------------------------------
+  [ OK ] 600 frames en 10 s (esperados 600)
+  [ OK ] frames perdidos 0.00% (maximo 1%)
+
+------------------------------------------------------------------------
+RESULTADO
+------------------------------------------------------------------------
+  COMPUERTA SUPERADA
+
+  RECORDATORIO: esta compuerta verifica la LOGICA de generacion.
+  En la maquina del laboratorio hay que ejecutar ademas:
+     python run_estimulo.py demo
+  y comprobar que los frames perdidos se mantienen bajo el 1%
+  con el video real de fondo.
+0.4822 	WARNING 	Monitor specification not found. Creating a temporary one...
+  
+  
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+python3 run_estimulo.py test
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/estimulo_F1/run_estimulo.py:53: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+BATERIA DE TESTS
+========================================================================
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/user/Documentos/Tesis/Codigo_3C2_Fase1/estimulo_F1
+collected 44 items                                                             
+
+tests/test_estimulo.py::TestConfigEstimulo::test_una_posicion_por_frecuencia PASSED [  2%]
+tests/test_estimulo.py::TestConfigEstimulo::test_frecuencias_bajo_nyquist PASSED [  4%]
+tests/test_estimulo.py::TestConfigEstimulo::test_frecuencias_en_bin_entero PASSED [  6%]
+tests/test_estimulo.py::TestConfigEstimulo::test_densidad_no_bajo_el_umbral PASSED [  9%]
+tests/test_estimulo.py::TestConfigEstimulo::test_estimulo_mayor_que_su_rejilla PASSED [ 11%]
+tests/test_estimulo.py::TestConfigEstimulo::test_onda_cuadrada_no_es_viable PASSED [ 13%]
+tests/test_estimulo.py::TestGenerador::test_luminancia_en_rango PASSED   [ 15%]
+tests/test_estimulo.py::TestGenerador::test_una_luminancia_por_estimulo PASSED [ 18%]
+tests/test_estimulo.py::TestGenerador::test_contador_avanza PASSED       [ 20%]
+tests/test_estimulo.py::TestGenerador::test_reiniciar_pone_el_contador_a_cero PASSED [ 22%]
+tests/test_estimulo.py::TestGenerador::test_espectro_exacto PASSED       [ 25%]
+tests/test_estimulo.py::TestGenerador::test_fase_no_deriva PASSED        [ 27%]
+tests/test_estimulo.py::TestGenerador::test_activos_apaga_los_demas PASSED [ 29%]
+tests/test_estimulo.py::TestGenerador::test_secuencia_no_avanza_el_contador PASSED [ 31%]
+tests/test_estimulo.py::TestGenerador::test_reproducible PASSED          [ 34%]
+tests/test_estimulo.py::TestGenerador::test_fases_jfpm_distintas PASSED  [ 36%]
+tests/test_estimulo.py::TestTextura::test_densidad_correcta PASSED       [ 38%]
+tests/test_estimulo.py::TestTextura::test_numero_exacto_de_celdas PASSED [ 40%]
+tests/test_estimulo.py::TestTextura::test_render_tiene_el_tamano_pedido PASSED [ 43%]
+tests/test_estimulo.py::TestTextura::test_render_escala_con_la_luminancia PASSED [ 45%]
+tests/test_estimulo.py::TestTextura::test_celdas_apagadas_quedan_a_cero PASSED [ 47%]
+tests/test_estimulo.py::TestTextura::test_misma_semilla_misma_textura PASSED [ 50%]
+tests/test_estimulo.py::TestTextura::test_semillas_distintas_texturas_distintas PASSED [ 52%]
+tests/test_estimulo.py::TestTextura::test_uniforme_es_diferente_de_aleatoria PASSED [ 54%]
+tests/test_estimulo.py::TestRegistroFrames::test_sin_perdidas_con_intervalos_nominales PASSED [ 56%]
+tests/test_estimulo.py::TestRegistroFrames::test_detecta_perdidas PASSED [ 59%]
+tests/test_estimulo.py::TestRegistroFrames::test_registro_vacio_no_rompe PASSED [ 61%]
+tests/test_estimulo.py::TestValidacion::test_recupera_la_frecuencia PASSED [ 63%]
+tests/test_estimulo.py::TestValidacion::test_snr_mayor_con_mejor_senal PASSED [ 65%]
+tests/test_estimulo.py::TestValidacion::test_jitter_degrada_la_snr PASSED [ 68%]
+tests/test_estimulo.py::TestValidacion::test_ruido_puro_da_snr_baja PASSED [ 70%]
+tests/test_estimulo.py::TestValidacion::test_acepta_senal_multicanal PASSED [ 72%]
+tests/test_estimulo.py::TestVideo::test_fuente_sintetica_entrega_frames PASSED [ 75%]
+tests/test_estimulo.py::TestVideo::test_frames_cambian_en_el_tiempo PASSED [ 77%]
+tests/test_estimulo.py::TestVideo::test_fabrica_rechaza_tipo_desconocido PASSED [ 79%]
+tests/test_estimulo.py::TestVideo::test_context_manager PASSED           [ 81%]
+tests/test_estimulo.py::TestInterfaz::test_dibuja_el_numero_de_frames_pedido PASSED [ 84%]
+tests/test_estimulo.py::TestInterfaz::test_etapa2_apaga_los_estimulos_no_usados PASSED [ 86%]
+tests/test_estimulo.py::TestInterfaz::test_registra_el_estado_tasm PASSED [ 88%]
+tests/test_estimulo.py::TestInterfaz::test_funciona_sin_fuente_de_video PASSED [ 90%]
+tests/test_estimulo.py::TestInterfaz::test_reiniciar_limpia_el_historial PASSED [ 93%]
+tests/test_estimulo.py::TestInterfaz::test_la_luminancia_sigue_al_generador PASSED [ 95%]
+tests/test_estimulo.py::TestIntegracion::test_sesion_de_treinta_segundos PASSED [ 97%]
+tests/test_estimulo.py::TestIntegracion::test_cambio_de_etapa_no_reinicia_la_fase PASSED [100%]
+
+============================== 44 passed in 3.77s ==============================   
+  
+
+  
+---------------------------------------------------------------------------------------------------------------------------------------------  
+  
+ python3 run_estimulo.py demo
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/estimulo_F1/run_estimulo.py:53: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+DEMOSTRACION GRAFICA
+========================================================================
+
+  Pulsa ESC para salir.
+  Pulsa ESPACIO para alternar entre Etapa 1 y Etapa 2.
+
+[OK] Tasa de refresco: 60.0 Hz
+
+  Frames presentados : 32739
+  Intervalo medio    : 16.67 ms (nominal 16.67 ms)
+  Desviacion tipica  : 0.801 ms
+  Intervalo maximo   : 50.76 ms
+  Frames perdidos    : 9 (0.03%)
+0.9235 	WARNING 	Monitor specification not found. Creating a temporary one...
+  
+  
+ 
+ 
+ 
+
+
+
+
+
+
