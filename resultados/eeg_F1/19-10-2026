@@ -1,0 +1,384 @@
+user@user-ASUS-TUF-Gaming-A16-FA608UM-FA608UM:~/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1$ python run_eeg.py config
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1/run_eeg.py:52: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+CONFIGURACION DE ADQUISICION
+========================================================================
+
+  Senal
+    Muestreo        : 256.0 Hz
+    Canales         : 9
+    Orden           : Pz, PO5, PO3, POz, PO4, PO6, Oz, O1, O2
+
+  Filtrado
+    Notch           : 60.0 Hz, Q=60.0
+    Banda suprimida : 59.50 - 60.50 Hz
+    Pasabanda       : 5.0 - 90.0 Hz, orden 4
+    Tipo            : causal con estado
+
+  Ventaneo
+    Bloque          : 12 muestras (47 ms)
+    Ventana         : 192 muestras (750 ms)
+    Paso            : 13 muestras (50 ms)
+    Solapamiento    : 93%
+
+  Artefactos
+    Amplitud max    : 150 uV
+    Gradiente max   : 497 uV (derivado de la banda)
+
+  Latencia
+    Computo         : 32 ms (periodo 50 ms)
+    Extremo a extremo: 82 ms (watchdog 400 ms)
+
+------------------------------------------------------------------------
+VALIDACION
+------------------------------------------------------------------------
+  Sin problemas en la configuracion de adquisicion.
+  
+-------------------------------------------------------------------------------------------------------------------------------------------
+user@user-ASUS-TUF-Gaming-A16-FA608UM-FA608UM:~/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1$ python run_eeg.py filtros
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1/run_eeg.py:52: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+RESPUESTA DE LA CADENA DE FILTRADO
+========================================================================
+
+------------------------------------------------------------------------
+Ganancia en las frecuencias de interes
+------------------------------------------------------------------------
+    frecuencia   ganancia  que es
+          2.0Hz     0.0229  por debajo de la banda
+          8.0Hz     0.9925  fundamental
+         12.0Hz     0.9999  fundamental
+         14.0Hz     1.0000  fundamental
+         15.2Hz     1.0000  fundamental
+         16.0Hz     1.0000  armonico 2 de 8.0 Hz
+         24.0Hz     1.0000  armonico 2 de 12.0 Hz
+         24.0Hz     1.0000  armonico 3 de 8.0 Hz
+         28.0Hz     0.9999  armonico 2 de 14.0 Hz
+         30.4Hz     0.9999  armonico 2 de 15.2 Hz
+         32.0Hz     0.9999  armonico 4 de 8.0 Hz
+         36.0Hz     0.9998  armonico 3 de 12.0 Hz
+         42.0Hz     0.9997  armonico 3 de 14.0 Hz
+         45.6Hz     0.9995  armonico 3 de 15.2 Hz
+         48.0Hz     0.9992  armonico 4 de 12.0 Hz
+         56.0Hz     0.9923  armonico 4 de 14.0 Hz
+         60.0Hz     0.0000  RED ELECTRICA  <-- debe suprimirse
+         60.8Hz     0.8473  armonico 4 de 15.2 Hz  <-- CRITICO
+        110.0Hz     0.0358  por encima de la banda
+
+------------------------------------------------------------------------
+EL PUNTO CRITICO
+------------------------------------------------------------------------
+  El 4o armonico de 15.2 Hz cae en 60.8 Hz, a 0.8 Hz de la red.
+  Por eso el factor Q del notch no puede ser el habitual de 30.
+
+      Q        banda suprimida   ganancia 60.8 Hz
+     30      59.00-61.00                  0.6240
+     45      59.33-60.67                  0.7675
+     60      59.50-60.50                  0.8473  <-- actual
+     90      59.67-60.33                  0.9225
+
+------------------------------------------------------------------------
+VERIFICACION
+------------------------------------------------------------------------
+  La cadena deja pasar todas las fundamentales y armonicos
+  utiles, y suprime la red.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+user@user-ASUS-TUF-Gaming-A16-FA608UM-FA608UM:~/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1$ python run_eeg.py causal
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1/run_eeg.py:52: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+POR QUE EL FILTRADO ES CAUSAL Y CON ESTADO
+========================================================================
+
+------------------------------------------------------------------------
+1. filtfilt NO es causal
+------------------------------------------------------------------------
+  Se filtra un escalon: cero hasta la mitad, luego uno.
+  Un filtro causal no puede reaccionar ANTES del escalon.
+
+  Maxima respuesta antes del escalon:
+    filtfilt : 0.544215  <-- reacciona antes de que ocurra
+    lfilter  : 0.000000
+
+  filtfilt usa muestras futuras. Offline es legitimo; online esas
+  muestras no existen todavia. Usarlo daria un rendimiento en
+  analisis que no se reproduce en tiempo real.
+
+------------------------------------------------------------------------
+2. El estado debe persistir entre bloques
+------------------------------------------------------------------------
+  Rango de la senal filtrada : 65.2 uV
+
+  Error CON estado : 0.000000 uV (0.0000%)
+  Error SIN estado : 62.18 uV (95.4%)
+
+  Con estado, filtrar por bloques da EXACTAMENTE el mismo
+  resultado que filtrar la senal entera.
+
+  Sin estado, cada bloque arranca con un transitorio. A 21 bloques
+  por segundo, eso serian 21 transitorios por segundo
+  contaminando la senal.
+  
+  
+  
+-------------------------------------------------------------------------------------------------------------------------------------------
+user@user-ASUS-TUF-Gaming-A16-FA608UM-FA608UM:~/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1$ python run_eeg.py buffer
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1/run_eeg.py:52: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+VENTANEO SOLAPADO
+========================================================================
+
+  Hay un desajuste que resolver:
+    el amplificador entrega bloques de 12 muestras
+    la ventana de analisis es de 192
+    y avanza 13 muestras cada vez
+
+  Cada ventana solapa un 93% con la anterior.
+
+------------------------------------------------------------------------
+Simulacion
+------------------------------------------------------------------------
+    bloque   muestras   ventanas   acumuladas
+         1         12          0            0
+         2         24          0            0
+         3         36          0            0
+        16        192          1            1
+        17        204          0            1
+        18        216          1            2
+        30        360          0           13
+        45        540          1           27
+        60        720          1           41
+
+  [ OK ] 41 ventanas de 41 esperadas
+  
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+user@user-ASUS-TUF-Gaming-A16-FA608UM-FA608UM:~/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1$ python run_eeg.py pipeline
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1/run_eeg.py:52: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+COMPUERTA DEL BLOQUE 3 --- Cadena completa
+========================================================================
+
+  Se genera senal con respuesta SSVEP conocida, se pasa por toda
+  la cadena, y se comprueba que la frecuencia se recupera.
+
+------------------------------------------------------------------------
+Frecuencia inyectada: 8.0 Hz (indice 0)
+------------------------------------------------------------------------
+  [ OK ] acierto 91.7% (66/72 ventanas)
+
+------------------------------------------------------------------------
+Frecuencia inyectada: 12.0 Hz (indice 1)
+------------------------------------------------------------------------
+  [ OK ] acierto 100.0% (72/72 ventanas)
+
+------------------------------------------------------------------------
+Frecuencia inyectada: 14.0 Hz (indice 2)
+------------------------------------------------------------------------
+  [ OK ] acierto 97.2% (70/72 ventanas)
+
+------------------------------------------------------------------------
+Frecuencia inyectada: 15.2 Hz (indice 3)
+------------------------------------------------------------------------
+  [ OK ] acierto 100.0% (72/72 ventanas)
+
+------------------------------------------------------------------------
+Rendimiento
+------------------------------------------------------------------------
+  Bloques leidos      : 117
+  Ventanas procesadas : 94
+  Ventanas invalidas  : 0 (0.0%)
+  Mensajes enviados   : 0
+  Duracion            : 5.00 s
+  Tasa de ventanas    : 18.8 Hz (nominal 20.0 Hz)
+
+  Computo medio       : 2.90 ms
+  Computo p95         : 3.42 ms
+  Periodo disponible  : 50.0 ms
+  Margen (p95)        : +46.58 ms OK
+  [ OK ] el computo cabe en el periodo de ventana
+  [ OK ] tasa de ventanas 18.8 Hz
+
+------------------------------------------------------------------------
+RESULTADO
+------------------------------------------------------------------------
+  COMPUERTA SUPERADA
+
+  RECORDATORIO: esto verifica la cadena con senal sintetica.
+  En el laboratorio hay que comprobar ademas:
+    - impedancias por debajo de 5 kOhm antes de cada sesion
+    - picos espectrales con un sujeto real (protocolo Bloque 2)
+    - orden de canales identico a config.bci.canales
+    
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+user@user-ASUS-TUF-Gaming-A16-FA608UM-FA608UM:~/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1$ python run_eeg.py latencia
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1/run_eeg.py:52: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+PRESUPUESTO DE LATENCIA
+========================================================================
+
+  Hay DOS latencias distintas y conviene no confundirlas.
+
+------------------------------------------------------------------------
+1. Tiempo de COMPUTO por ventana
+------------------------------------------------------------------------
+  Es lo unico que debe caber en el periodo de ventana. Si el
+  procesamiento tardara mas que el intervalo entre ventanas, la
+  cola creceria sin limite.
+
+  Medido (media)  : 2.91 ms
+  Medido (p95)    : 3.40 ms
+  Presupuestado   : 32.0 ms
+  Periodo         : 50.0 ms
+
+  [ OK ] margen de 46.60 ms sobre el periodo
+
+------------------------------------------------------------------------
+2. Latencia EXTREMO A EXTREMO
+------------------------------------------------------------------------
+  Retardo entre que ocurre algo en el cerebro y el robot
+  reacciona. NO tiene que caber en el periodo: la cadena es un
+  pipeline y las etapas se solapan.
+
+    adquisicion   :   20.0 ms
+    filtrado      :    2.0 ms
+    clasificacion :   30.0 ms
+    transporte    :   20.0 ms
+    ros2          :   10.0 ms
+    TOTAL         :   82.0 ms
+
+  Watchdog        : 400 ms
+  [ OK ] margen de 318 ms sobre el watchdog
+
+------------------------------------------------------------------------
+3. Retardo total del comando
+------------------------------------------------------------------------
+  Lo que el usuario percibe: desde que empieza a mirar el
+  estimulo hasta que el robot se mueve.
+
+    racha de confirmacion :    400 ms
+    cadena                :     82 ms
+    TOTAL                 :    482 ms
+
+  A 0.15 m/s, el robot recorre 7.2 cm
+  durante ese retardo.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+user@user-ASUS-TUF-Gaming-A16-FA608UM-FA608UM:~/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1$ python run_eeg.py test
+/home/user/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1/run_eeg.py:52: UserWarning: 
+
+*** PROBLEMAS DE CONFIGURACION DETECTADOS ***
+  - AVISO DE DISENO: n_conf=8 ventanas es menor o igual que la duracion maxima de una TR (12.0 ventanas). Una transicion podria completar la racha y enclavar un comando espurio.
+
+Revisa config.py antes de continuar.
+
+  from config import CONFIG
+
+========================================================================
+BATERIA DE TESTS
+========================================================================
+================================== test session starts ===================================
+platform linux -- Python 3.10.12, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python
+cachedir: .pytest_cache
+rootdir: /home/user/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1
+collected 44 items                                                                       
+
+tests/test_eeg.py::TestConfigAdquisicion::test_buffer_no_mayor_que_el_paso PASSED  [  2%]
+tests/test_eeg.py::TestConfigAdquisicion::test_notch_no_toca_armonicos_utiles PASSED [  4%]
+tests/test_eeg.py::TestConfigAdquisicion::test_computo_cabe_en_el_periodo PASSED   [  6%]
+tests/test_eeg.py::TestConfigAdquisicion::test_latencia_bajo_el_watchdog PASSED    [  9%]
+tests/test_eeg.py::TestConfigAdquisicion::test_filtrado_causal_activado PASSED     [ 11%]
+tests/test_eeg.py::TestConfigAdquisicion::test_umbral_gradiente_derivado_no_arbitrario PASSED [ 13%]
+tests/test_eeg.py::TestFiltrado::test_estado_persiste_entre_bloques PASSED         [ 15%]
+tests/test_eeg.py::TestFiltrado::test_sin_estado_produce_transitorios PASSED       [ 18%]
+tests/test_eeg.py::TestFiltrado::test_lfilter_es_causal PASSED                     [ 20%]
+tests/test_eeg.py::TestFiltrado::test_filtfilt_no_es_causal PASSED                 [ 22%]
+tests/test_eeg.py::TestFiltrado::test_suprime_la_red PASSED                        [ 25%]
+tests/test_eeg.py::TestFiltrado::test_deja_pasar_las_fundamentales PASSED          [ 27%]
+tests/test_eeg.py::TestFiltrado::test_deja_pasar_el_armonico_critico PASSED        [ 29%]
+tests/test_eeg.py::TestFiltrado::test_q_bajo_perderia_el_armonico PASSED           [ 31%]
+tests/test_eeg.py::TestFiltrado::test_verificacion_sin_problemas PASSED            [ 34%]
+tests/test_eeg.py::TestFiltrado::test_rechaza_numero_de_canales_incorrecto PASSED  [ 36%]
+tests/test_eeg.py::TestArtefactos::test_acepta_senal_limpia PASSED                 [ 38%]
+tests/test_eeg.py::TestArtefactos::test_detecta_parpadeo PASSED                    [ 40%]
+tests/test_eeg.py::TestArtefactos::test_detecta_saturacion PASSED                  [ 43%]
+tests/test_eeg.py::TestArtefactos::test_informa_del_motivo PASSED                  [ 45%]
+tests/test_eeg.py::TestFuentes::test_sintetica_entrega_bloques PASSED              [ 47%]
+tests/test_eeg.py::TestFuentes::test_respeta_el_ritmo_temporal PASSED              [ 50%]
+tests/test_eeg.py::TestFuentes::test_no_entrega_nada_sin_iniciar PASSED            [ 52%]
+tests/test_eeg.py::TestFuentes::test_mirar_cambia_la_frecuencia PASSED             [ 54%]
+tests/test_eeg.py::TestFuentes::test_dataset_reproduce PASSED                      [ 56%]
+tests/test_eeg.py::TestFuentes::test_dataset_remuestrea PASSED                     [ 59%]
+tests/test_eeg.py::TestFuentes::test_fabrica_rechaza_fuente_desconocida PASSED     [ 61%]
+tests/test_eeg.py::TestFuentes::test_impedancias_simuladas_correctas PASSED        [ 63%]
+tests/test_eeg.py::TestBuffer::test_no_hay_ventana_al_principio PASSED             [ 65%]
+tests/test_eeg.py::TestBuffer::test_primera_ventana_tras_llenar PASSED             [ 68%]
+tests/test_eeg.py::TestBuffer::test_ventana_del_tamano_correcto PASSED             [ 70%]
+tests/test_eeg.py::TestBuffer::test_ventanas_solapan PASSED                        [ 72%]
+tests/test_eeg.py::TestBuffer::test_numero_de_ventanas_esperado PASSED             [ 75%]
+tests/test_eeg.py::TestBuffer::test_rechaza_canales_incorrectos PASSED             [ 77%]
+tests/test_eeg.py::TestBuffer::test_reiniciar PASSED                               [ 79%]
+tests/test_eeg.py::TestMensaje::test_json_valido PASSED                            [ 81%]
+tests/test_eeg.py::TestMensaje::test_diagnostico_opcional PASSED                   [ 84%]
+tests/test_eeg.py::TestMensaje::test_puente_no_lanza_sin_servidor PASSED           [ 86%]
+tests/test_eeg.py::TestPipeline::test_procesa_ventanas PASSED                      [ 88%]
+tests/test_eeg.py::TestPipeline::test_recupera_la_frecuencia PASSED                [ 90%]
+tests/test_eeg.py::TestPipeline::test_computo_cabe_en_el_periodo PASSED            [ 93%]
+tests/test_eeg.py::TestPipeline::test_tasa_de_ventanas_correcta PASSED             [ 95%]
+tests/test_eeg.py::TestPipeline::test_funciona_sin_puente PASSED                   [ 97%]
+tests/test_eeg.py::TestPipeline::test_reiniciar PASSED                             [100%]
+
+================================== 44 passed in 20.58s ===================================
+user@user-ASUS-TUF-Gaming-A16-FA608UM-FA608UM:~/Documentos/Tesis/Codigo_3C2_Fase1/eeg_F1$  
+
